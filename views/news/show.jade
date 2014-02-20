@@ -29,7 +29,7 @@ block content
             input.btn.btn-primary(type='submit', value='Add Comment')
 
     each comment, index in comments
-      div.comment
+      div.comment(id="comment-#{comment._id}")
         a(href='/news/user/' + comment.poster.username)= comment.poster.username
         span.timeago(title="#{comment.created}")= timeago(comment.created)
         blockquote.content

@@ -100,7 +100,8 @@ block content
                                             small #{item.comment_count} comments
                             br
                             if item.comment_count > 0
-                                small last comment #{timeago(item.latestCommentAt)}
+                                small last comment
+                                    a.timeago(title="#{item.latestCommentAt}", href="/news/#{item._id}#comment-##{item.latestCommentId}")= " "+timeago(item.latestCommentAt)
                             p(class='hidden summary')
                                 em= item.summary
                         if !filteredSource
@@ -123,7 +124,8 @@ block content
                             td.comment
                                 blockquote.content= comment.contents
                                     +delete(comment.poster, '/news/' + comment.newsItem._id + '/comments/' + comment._id + '/delete')
-                                small.timeago(title="#{comment.created}")= timeago(comment.created)
+                                small
+                                    a.timeago(title="#{comment.created}", href="/news/#{comment.newsItem._id}#comment-#{comment._id}" )= timeago(comment.created)
                             td.parent
                                 a(href=comment.newsItem.url)
                                     | #{comment.newsItem.title}

@@ -395,7 +395,8 @@ function addLatestCommentTimeForNewsItems(items,callback) {
 
             if((typeof comments === 'object') && (typeof comments.created !== 'undefined')) {
                 item.latestCommentAt = comments.created; 
-				item.latestCommentBy = comments.poster;
+				        item.latestCommentBy = comments.poster;
+                item.latestCommentId = comments._id
             } 
             
             cb(null,item);
