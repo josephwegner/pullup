@@ -174,7 +174,7 @@ body {
         font-weight: bold;
       }
 
-      &.news-item {
+      &.news-item, &.comment-item{
         border-bottom: 1px solid #ecf0f0;
 
         &:last-child {
@@ -224,7 +224,7 @@ body {
       }
     }
     @media (max-width: 767px) {
-      li.news-item {
+      li.news-item, li.comment-item {
         position: relative;
         padding: 0;
         min-height: 6em;
@@ -304,15 +304,15 @@ body {
 // News Item
 // -------------------------
 
-.news-item .row {
+.news-item .row, .comment-item .row {
   margin: 0 0 10px;
 }
 
-.news-item .comment .timeago {
+.news-item .comment .timeago, .comment-item .comment .timeago {
   margin: 0 5px;
 }
 
-.news-item .item-summary {
+.news-item .item-summary, .comment-item .item-summary {
   font-size: 15px;
   line-height: 1.4em;
 }

@@ -44,6 +44,7 @@ block content
 
                             a(href='#{userProfile.website}', target='_blank') #{userProfile.website}
         .page-header
+          include ../partials/analytics
           ul.nav.nav-tabs
             li.active
               a(href='#news', data-toggle='tab')
@@ -62,7 +63,7 @@ block content
                 if !filteredSource
                     div.col-sm-3 Source
             each item, index in items
-                li.row.news-item
+                li.row.news-item(data-posted-on="#{item.created}")
                     div.col-xs-2.col-sm-2.col-lg-1.upvote-wrapper
                         span.hidden-xs.text-muted= index + 1
                         if !item.votedFor
@@ -121,7 +122,7 @@ block content
                 div.col-sm-7 Comment
                 div.col-sm-4 Parent
             each comment, index in comments
-                li.row.news-item
+                li.row.comment-item(data-posted-on="#{comment.created}")
                     div.col-sm-1.hidden-xs
                         span.hidden-xs.text-muted= index + 1
                     div.col-sm-7
