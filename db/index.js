@@ -9,7 +9,7 @@
  *		other than logging, but it will make this list more readable
  *	migration: This is the actual file that contains the migration code.
  *		PLEASE store your migrations in /db/migrations. Your migrations file MUST export a run function.
- *		The run function will be called when the migration is run. It will be passed a callback function
+ *		The run function will be called when the migration is run. It will be passed a connected mongoose instance, and a callback
  *		The callback should be called with a single parameter - error.  So, like, callback("this is an error");
  *		If there is no error, please return null. So like, callback(null);
  *		You can look at initialize.js for a simple example.
@@ -39,7 +39,7 @@ var migrations = exports.migrations = [
  * If you're just adding a new migration, there is no reason to edit below this line
 **/
 
-exports.runMigrationsSince = function(currentVersion, cb) {
+exports.runMigrationsSince = function(mongoose, currentVersion, cb) {
 	var migrationsToDo = [];
 
 	for(var i=migrations.length - 1; i >= 0; i--) {
@@ -64,7 +64,7 @@ exports.runMigrationsSince = function(currentVersion, cb) {
 			currentVersion = newVersion;
 
 			if(migrationsToDo.length) {
-				runMigration(migrationsToDo.shift(), migrationDone);
+				runMigration(migrationsToDo.shift(), mongoose, migrationDone);
 			} else {
 				console.log("Migrations done.");
 				if(typeof(cb) === "function") {
@@ -74,14 +74,14 @@ exports.runMigrationsSince = function(currentVersion, cb) {
 		}
 	}
 
-	runMigration(migrationsToDo.shift(), migrationDone);
+	runMigration(migrationsToDo.shift(), mongoose, migrationDone);
 }
 
-var runMigration = exports.runMigration = function(migration, cb) {
+var runMigration = exports.runMigration = function(migration, mongoose, cb) {
 	console.log("Migration to db version "+migration.version);
 	console.log("Migration: " + migration.description);
 
-	migration.migration.run(function(err) {
+	migration.migration.run(mongoose, function(err) {
 		if(err) {
 			if(typeof(cb) === "function") {
 				cb(err);

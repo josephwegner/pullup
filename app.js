@@ -76,7 +76,7 @@ mongoose.connect(secrets.db.host, function(err) {
 
             //Now we need to check that the most recent migration is newer than the system's DB version..
             if(system.db.version !== migrations[migrations.length - 1].version) {
-              db.runMigrationsSince(system.db.version, function(err, newVersion) {
+              db.runMigrationsSince(mongoose, system.db.version, function(err, newVersion) {
                 if(err) {
                   console.log("Migration Error:", err);
                 }
