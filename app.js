@@ -13,7 +13,9 @@ var expressValidator = require('express-validator');
 var argv = require('optimist').argv;
 var timeago = require('timeago');
 var request = require('request');
+var async = require('async');
 var _ = require('underscore');
+var db = require("./db");
 
 /**
  * Create Express server.
@@ -46,7 +48,52 @@ var passportConf = require('./config/passport');
  * Mongoose configuration.
  */
 
-mongoose.connect(secrets.db);
+mongoose.connect(secrets.db.host, function(err) {
+    if(!err && argv.migrations) {
+      async.parallel(
+        [
+          function(cb) { //Get the system model
+            var System = require("./models/System.js");
+            System.getSystem(cb);
+          },
+          function(cb) { //Get all the migrations and sort them by version number
+            var migrations = db.migrations.slice();
+            migrations.sort(function(a, b) {
+              return a.version - b.version;
+            });
+
+            cb(null, migrations);
+          }
+        ],
+        function(err, results) {
+          if(!err) {
+            var system = results[0];
+            var migrations = results[1];
+
+            if(typeof(system.shift) === "function") {
+              system = system[0];
+            }
+
+            //Now we need to check that the most recent migration is newer than the system's DB version..
+            if(system.db.version !== migrations[migrations.length - 1].version) {
+              db.runMigrationsSince(system.db.version, function(err, newVersion) {
+                if(err) {
+                  console.log("Migration Error:", err);
+                }
+
+                if(newVersion !== system.db.version) {
+                  system.db.version = newVersion;
+                  system.db.save();
+
+                  console.log("DB is now at version " + newVersion);
+                }
+              });
+            }
+          }
+        }
+      )
+    }
+});
 mongoose.connection.on('error', function() {
   console.log('✗ MongoDB Connection Error. Please make sure MongoDB is running.'.red);
 });

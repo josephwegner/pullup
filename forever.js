@@ -1,7 +1,8 @@
   var forever = require('forever-monitor');
 
   var child = new (forever.Monitor)('app.js', {
-    max: 3
+    max: 3,
+    options: process.argv.slice(2)
   });
 
   child.on('exit', function () {

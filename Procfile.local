@@ -1,2 +1,2 @@
-web: node forever.js
+web: node forever.js --migrations
 mongo: mongod

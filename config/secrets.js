@@ -1,5 +1,8 @@
 module.exports = {
-  db: process.env.MONGOHQ_URL || 'localhost',
+  db: {
+      host: process.env.MONGOHQ_URL || 'localhost',
+      version: 1
+  },
 
   sendgrid: {
     user: 'Your SendGrid Username',
